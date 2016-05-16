@@ -58,5 +58,5 @@ def create_dataset(dir, num):
 
 random.seed()
 wikipedia.set_lang("en")
-create_dataset("train", 10)
-create_dataset("test", 10)
+create_dataset("train", 10000)
+create_dataset("test", 10000)
