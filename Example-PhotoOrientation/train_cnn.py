@@ -1,6 +1,9 @@
 import tensorflow as tf
+import operator
 from glob import glob
 from dataset_loader import load_dataset
+from itertools import compress
+from scipy.misc import imsave
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
@@ -12,6 +15,9 @@ flags.DEFINE_string('test_dir', './test', 'directory containing training data')
 flags.DEFINE_string('model_file', './model.ckpt', 'path to save or load trained model parameters')
 flags.DEFINE_boolean('train', True, 'whether or not to train model')
 flags.DEFINE_boolean('test', True, 'whether or not to test model')
+flags.DEFINE_boolean('save_test_examples', False, 'whether or not to save examples of passing and failing model input')
+flags.DEFINE_integer('num_passing_test_examples', 10, 'number of examples of passing model input to save')
+flags.DEFINE_integer('num_failing_test_examples', 10, 'number of examples of failing model input to save')
 
 x = tf.placeholder(tf.float32, [None, 100, 100, 3])
 y_ = tf.placeholder(tf.float32, [None, 4])
@@ -74,16 +80,33 @@ with tf.Session() as sess:
                 train_accuracy = accuracy.eval(session=sess, feed_dict={x: train_images, y_: train_labels, keep_prob: 1.0})
                 print("\tstep %d, training accuracy %g"%(i, train_accuracy))
             train_step.run(session=sess, feed_dict={x: train_images, y_: train_labels, keep_prob: 0.5})
-        print "Training complete."
-
+        print "Training complete, saving model."
         save_path = saver.save(sess, FLAGS.model_file)
+        print "Model saved."
     else:
         print "Restoring previously trained model."
         saver.restore(sess, FLAGS.model_file)
+        print "Model restored."
 
     if FLAGS.test:
         print "Loading test dataset."
-        test_images, test_labels = load_dataset(glob(FLAGS.test_dir + "/*.jpg"), scale = (100, 100))
+        test_images, test_labels = load_dataset(glob(FLAGS.test_dir + "/*.jpg"), scale=(100, 100))
         print "Starting test."
         print("\ttest accuracy %g"%accuracy.eval(session=sess, feed_dict={
             x: test_images, y_: test_labels, keep_prob: 1.0}))
+
+    if FLAGS.save_test_examples:
+        pass_count = FLAGS.num_passing_test_examples
+        fail_count = FLAGS.num_passing_test_examples
+        while pass_count > 0 and fail_count > 0:
+            test_images, test_labels = load_dataset(glob(FLAGS.test_dir + "/*.jpg") , batch_size = FLAGS.batch_size, scale=(100, 100))
+            correct = correct_prediction.eval(session=sess, feed_dict={
+                x: test_images, y_: test_labels, keep_prob: 1.0})
+            for pass_image in compress(test_images, correct):
+                if pass_count > 0:
+                    imsave("passed_" + str(pass_count) + ".jpg", pass_image)
+                    pass_count -= 1
+            for fail_image in compress(test_images, map(operator.not_, correct)):
+                if fail_count > 0:
+                    imsave("failed_" + str(fail_count) + ".jpg", fail_image)
+                    fail_count -= 1
