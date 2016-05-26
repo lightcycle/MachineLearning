@@ -5,17 +5,22 @@ import logging
 import tempfile
 import random
 import mwclient
+from hashlib import md5
 from PIL import Image
 
 
-def random_image_title():
+def random_unique_image_title():
     for title in (page['title'] for page in site.random('6', limit = None)):
         if title.lower().endswith((".png", "jpg")):
+            hash = md5(title.encode('utf-8')).hexdigest()
+            if hash in hashes:
+                continue
+            hashes.add(hash)
             yield title
 
 
 def random_image():
-    for title in random_image_title():
+    for title in random_unique_image_title():
         data = cStringIO.StringIO()
         mwclient.image.Image(site, title).download(data)
         yield Image.open(data)
@@ -31,11 +36,28 @@ def random_rotation():
     return rotation, rotation_labels[rotation]
 
 
+def get_center_crop(image):
+    width, height = image.size
+
+    if width > height:
+        delta = width - height
+        left = int(delta / 2)
+        upper = 0
+        right = height + left
+        lower = height
+    else:
+        delta = height - width
+        left = 0
+        upper = int(delta / 2)
+        right = width
+        lower = width + upper
+    return left, upper, right, lower
+
+
 def get_formatted_image(image):
+    image = image.crop(get_center_crop(image))
     image.thumbnail(output_size)
-    new_image = Image.new("RGB", output_size)
-    new_image.paste(image, ((new_image.size[0] - image.size[0]) / 2, (new_image.size[1] - image.size[1]) / 2))
-    return new_image
+    return image
 
 
 def create_dataset(dir, num):
@@ -58,7 +80,8 @@ def create_dataset(dir, num):
 
 site = mwclient.client.Site('commons.wikimedia.org')
 mincolors = 10000
-output_size = (400, 400)
+output_size = (200, 200)
+hashes = set()
 random.seed()
 
 create_dataset("./train", 10000)
