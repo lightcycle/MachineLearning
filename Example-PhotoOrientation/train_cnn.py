@@ -1,7 +1,7 @@
 import tensorflow as tf
 import operator
 from glob import glob
-from dataset_loader import load_dataset
+from dataset_loader import load_dataset, load_image
 from itertools import compress
 from scipy.misc import imsave
 
@@ -18,6 +18,7 @@ flags.DEFINE_boolean('test', True, 'whether or not to test model')
 flags.DEFINE_boolean('save_test_examples', False, 'whether or not to save examples of passing and failing model input')
 flags.DEFINE_integer('num_passing_test_examples', 10, 'number of examples of passing model input to save')
 flags.DEFINE_integer('num_failing_test_examples', 10, 'number of examples of failing model input to save')
+flags.DEFINE_string('examine_file', None, 'path to a specific image input to save detailed results for')
 
 image_size = (100, 100)
 
@@ -101,6 +102,7 @@ with tf.Session() as sess:
             scores.append(score)
         print "Overall test accuracy %g" % (reduce(lambda x, y: x + y, scores) / len(scores))
 
+
     if FLAGS.save_test_examples:
         pass_count = FLAGS.num_passing_test_examples
         fail_count = FLAGS.num_passing_test_examples
@@ -116,3 +118,8 @@ with tf.Session() as sess:
                 if fail_count > 0:
                     imsave("failed_" + str(fail_count) + ".jpg", fail_image)
                     fail_count -= 1
+
+    if FLAGS.examine_file:
+        image = load_image(FLAGS.examine_file)
+        images = image.reshape(-1, image.shape[0], image.shape[1], image.shape[2])
+        print images.shape
