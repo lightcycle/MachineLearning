@@ -5,17 +5,15 @@ import logging
 import tempfile
 import random
 import mwclient
-from hashlib import md5
 from PIL import Image
 
 
 def random_unique_image_title():
     for title in (page['title'] for page in site.random('6', limit = None)):
         if title.lower().endswith((".png", "jpg")):
-            hash = md5(title.encode('utf-8')).hexdigest()
-            if hash in hashes:
+            if title in titles:
                 continue
-            hashes.add(hash)
+            titles.add(title)
             yield title
 
 
@@ -81,8 +79,8 @@ def create_dataset(dir, num):
 site = mwclient.client.Site('commons.wikimedia.org')
 mincolors = 10000
 output_size = (200, 200)
-hashes = set()
+titles = set()
 random.seed()
 
-create_dataset("./train", 10000)
-create_dataset("./test", 10000)
+create_dataset("./train", 20000)
+create_dataset("./test", 5000)
