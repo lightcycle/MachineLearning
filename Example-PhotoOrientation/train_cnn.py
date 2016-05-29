@@ -94,8 +94,12 @@ with tf.Session() as sess:
         print "Loading test dataset."
         test_images, test_labels = load_dataset(glob(FLAGS.test_dir + "/*.jpg"), scale = image_size)
         print "Starting test."
-        print("\ttest accuracy %g"%accuracy.eval(session=sess, feed_dict={
-            x: test_images, y_: test_labels, keep_prob: 1.0}))
+        scores = list()
+        for i in xrange(0, len(test_images), FLAGS.batch_size):
+            score = accuracy.eval(session=sess, feed_dict={x: test_images[i:i+FLAGS.batch_size], y_: test_labels[i:i+FLAGS.batch_size], keep_prob: 1.0})
+            print("\ttest accuracy %g" % score)
+            scores.append(score)
+        print "Overall test accuracy %g" % (reduce(lambda x, y: x + y, scores) / len(scores))
 
     if FLAGS.save_test_examples:
         pass_count = FLAGS.num_passing_test_examples
