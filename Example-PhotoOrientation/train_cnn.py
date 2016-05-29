@@ -19,7 +19,9 @@ flags.DEFINE_boolean('save_test_examples', False, 'whether or not to save exampl
 flags.DEFINE_integer('num_passing_test_examples', 10, 'number of examples of passing model input to save')
 flags.DEFINE_integer('num_failing_test_examples', 10, 'number of examples of failing model input to save')
 
-x = tf.placeholder(tf.float32, [None, 100, 100, 3])
+image_size = (200, 200)
+
+x = tf.placeholder(tf.float32, [None, image_size[0], image_size[1], 3])
 y_ = tf.placeholder(tf.float32, [None, 4])
 
 def weight_variable(shape):
@@ -75,7 +77,7 @@ with tf.Session() as sess:
         print "Starting training."
         training_file_list = glob(FLAGS.train_dir + "/*.jpg")
         for i in range(FLAGS.train_steps):
-            train_images, train_labels = load_dataset(training_file_list, batch_size = FLAGS.batch_size, scale = (100, 100))
+            train_images, train_labels = load_dataset(training_file_list, batch_size = FLAGS.batch_size, scale = image_size)
             if i > 0 and i % (FLAGS.update_steps) == 0:
                 train_accuracy = accuracy.eval(session=sess, feed_dict={x: train_images, y_: train_labels, keep_prob: 1.0})
                 print("\tstep %d, training accuracy %g"%(i, train_accuracy))
@@ -90,7 +92,7 @@ with tf.Session() as sess:
 
     if FLAGS.test:
         print "Loading test dataset."
-        test_images, test_labels = load_dataset(glob(FLAGS.test_dir + "/*.jpg"), scale=(100, 100))
+        test_images, test_labels = load_dataset(glob(FLAGS.test_dir + "/*.jpg"), scale = image_size)
         print "Starting test."
         print("\ttest accuracy %g"%accuracy.eval(session=sess, feed_dict={
             x: test_images, y_: test_labels, keep_prob: 1.0}))
@@ -99,7 +101,7 @@ with tf.Session() as sess:
         pass_count = FLAGS.num_passing_test_examples
         fail_count = FLAGS.num_passing_test_examples
         while pass_count > 0 and fail_count > 0:
-            test_images, test_labels = load_dataset(glob(FLAGS.test_dir + "/*.jpg") , batch_size = FLAGS.batch_size, scale=(100, 100))
+            test_images, test_labels = load_dataset(glob(FLAGS.test_dir + "/*.jpg") , batch_size = FLAGS.batch_size, scale = image_size)
             correct = correct_prediction.eval(session=sess, feed_dict={
                 x: test_images, y_: test_labels, keep_prob: 1.0})
             for pass_image in compress(test_images, correct):
