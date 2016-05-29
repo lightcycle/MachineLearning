@@ -19,7 +19,7 @@ flags.DEFINE_boolean('save_test_examples', False, 'whether or not to save exampl
 flags.DEFINE_integer('num_passing_test_examples', 10, 'number of examples of passing model input to save')
 flags.DEFINE_integer('num_failing_test_examples', 10, 'number of examples of failing model input to save')
 
-image_size = (200, 200)
+image_size = (100, 100)
 
 x = tf.placeholder(tf.float32, [None, image_size[0], image_size[1], 3])
 y_ = tf.placeholder(tf.float32, [None, 4])
