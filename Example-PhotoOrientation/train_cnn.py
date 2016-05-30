@@ -1,5 +1,7 @@
+import shutil
 import tensorflow as tf
 import operator
+import os
 from glob import glob
 from dataset_loader import load_dataset, load_image
 from itertools import compress
@@ -24,13 +26,20 @@ flags.DEFINE_string('examine_file', None, 'path to a specific image input to sav
 image_size = (200, 200)
 
 y_ = tf.placeholder(tf.float32, [None, 4])
-x, y_conv, keep_prob = model.create_graph(image_size)
+x, y_conv, keep_prob, h_conv1, b_conv1, h_conv2, b_conv2 = model.create_graph(image_size)
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y_conv), reduction_indices=[1]))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 saver = tf.train.Saver()
+
+
+def recreate(dir):
+    if os.path.exists(dir):
+        shutil.rmtree(dir)
+    os.makedirs(dir)
+
 
 with tf.Session() as sess:
     sess.run(tf.initialize_all_variables())
@@ -63,8 +72,8 @@ with tf.Session() as sess:
             scores.append(score)
         print "Overall test accuracy %g" % (reduce(lambda x, y: x + y, scores) / len(scores))
 
-
     if FLAGS.save_test_examples:
+        recreate("examples")
         pass_count = FLAGS.num_passing_test_examples
         fail_count = FLAGS.num_passing_test_examples
         while pass_count > 0 and fail_count > 0:
@@ -73,14 +82,22 @@ with tf.Session() as sess:
                 x: test_images, y_: test_labels, keep_prob: 1.0})
             for pass_image in compress(test_images, correct):
                 if pass_count > 0:
-                    imsave("passed_" + str(pass_count) + ".jpg", pass_image)
+                    imsave("examples/passed_" + str(pass_count) + ".jpg", pass_image)
                     pass_count -= 1
             for fail_image in compress(test_images, map(operator.not_, correct)):
                 if fail_count > 0:
-                    imsave("failed_" + str(fail_count) + ".jpg", fail_image)
+                    imsave("examples/failed_" + str(fail_count) + ".jpg", fail_image)
                     fail_count -= 1
 
     if FLAGS.examine_file:
+        recreate("examine")
         image = load_image(FLAGS.examine_file)
         images = image.reshape(-1, image.shape[0], image.shape[1], image.shape[2])
-        print images.shape
+        h1 = h_conv1.eval(session = sess, feed_dict={x: images})
+        bias1 = b_conv1.eval(session = sess)
+        for i in range(0, len(h1[0,0,0])):
+            imsave("examine/h1_" + str(bias1[i]) + ".jpg", h1[0,slice(None),slice(None),i])
+        h2 = h_conv2.eval(session=sess, feed_dict={x: images})
+        bias2 = b_conv2.eval(session=sess)
+        for i in range(0, len(h2[0, 0, 0])):
+            imsave("examine/h2_" + str(bias2[i]) + ".jpg", h2[0, slice(None), slice(None), i])

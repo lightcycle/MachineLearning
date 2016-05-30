@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 def weight_variable(shape):
     initial = tf.truncated_normal(shape, stddev=0.1)
     return tf.Variable(initial)
@@ -40,17 +41,14 @@ def create_graph(input_image_size):
     # Fully connected layer
     W_fc1 = weight_variable([10 * 10 * 64, 128])
     b_fc1 = bias_variable([128])
-
     h_pool2_flat = tf.reshape(h_pool2, [-1, 10 * 10 * 64])
     h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
     # Loss layer
     keep_prob = tf.placeholder(tf.float32)
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
-
     W_fc2 = weight_variable([128, 4])
     b_fc2 = bias_variable([4])
-
     y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
-    return x, y_conv, keep_prob
+    return x, y_conv, keep_prob, h_conv1, b_conv1, h_conv2, b_conv2
