@@ -35,7 +35,7 @@ def create_graph(input_image_size):
     W_conv2 = weight_variable([5, 5, 32, 64])
     b_conv2 = bias_variable([64])
     h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
-    h_pool2 = max_pool(h_conv2, 2)
+    h_pool2 = max_pool(h_conv2, 4)
 
     # Fully connected layer
     W_fc1 = weight_variable([10 * 10 * 64, 128])

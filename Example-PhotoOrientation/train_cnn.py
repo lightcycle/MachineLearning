@@ -21,7 +21,7 @@ flags.DEFINE_integer('num_passing_test_examples', 10, 'number of examples of pas
 flags.DEFINE_integer('num_failing_test_examples', 10, 'number of examples of failing model input to save')
 flags.DEFINE_string('examine_file', None, 'path to a specific image input to save detailed results for')
 
-image_size = (100, 100)
+image_size = (200, 200)
 
 y_ = tf.placeholder(tf.float32, [None, 4])
 x, y_conv, keep_prob = model.create_graph(image_size)
