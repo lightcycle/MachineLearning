@@ -1,27 +1,27 @@
-import cStringIO
+import urllib2
+import StringIO
 import os
 import traceback
 import logging
-import tempfile
 import random
-import mwclient
 from PIL import Image
 
 
-def random_unique_image_title():
-    for title in (page['title'] for page in site.random('6', limit = None)):
-        if title.lower().endswith((".png", "jpg")):
-            if title in titles:
-                continue
-            titles.add(title)
-            yield title
+def random_image_url():
+    print 'Loading URL index'
+    index_file = open('images.lst', 'r')
+    urls = index_file.readlines()
+    print 'Shuffling URL index'
+    random.shuffle(urls)
+    for url in urls:
+        yield url
 
 
 def random_image():
-    for title in random_unique_image_title():
-        data = cStringIO.StringIO()
-        mwclient.image.Image(site, title).download(data)
-        yield Image.open(data)
+    for url in random_image_url():
+        data = urllib2.urlopen(url).read()
+        image = Image.open(StringIO.StringIO(data))
+        yield image
 
 
 def usable_image(image):
@@ -63,24 +63,24 @@ def create_dataset(dir, num):
         os.makedirs(dir)
 
     images = random_image()
+    i = 0
     while len(os.listdir(dir)) < num:
         try:
             image = next(images)
             if usable_image(image):
                 angle, label = random_rotation()
-                tf = tempfile.NamedTemporaryFile(suffix = "-" + label + ".jpg", prefix = "", dir = dir, delete = False)
-                get_formatted_image(image).rotate(angle).save(tf.name)
+                path = os.path.join(dir, str(i) + "-" + label + ".jpg")
+                get_formatted_image(image).rotate(angle).save(path)
+                i += 1
         except StopIteration:
             images = random_image()
         except Exception as e:
             logging.error(traceback.format_exc())
 
 
-site = mwclient.client.Site('commons.wikimedia.org')
 mincolors = 10000
 output_size = (200, 200)
-titles = set()
 random.seed()
 
-create_dataset("./train", 20000)
-create_dataset("./test", 5000)
+create_dataset("./train", 100000)
+create_dataset("./test", 10000)
