@@ -3,7 +3,7 @@ import tensorflow as tf
 import operator
 import os
 from glob import glob
-from dataset_loader import load_dataset, load_image
+from dataset_loader import get_dataset_batcher, load_image
 from itertools import compress
 from scipy.misc import imsave
 import model
@@ -46,9 +46,9 @@ with tf.Session() as sess:
 
     if FLAGS.train:
         print "Starting training."
-        training_file_list = glob(FLAGS.train_dir + "/*.jpg")
+        dataset_batcher = get_dataset_batcher(glob(FLAGS.train_dir + "/*.jpg"), batch_size = FLAGS.batch_size, scale = image_size, repeat = True)
         for i in range(FLAGS.train_steps):
-            train_images, train_labels = load_dataset(training_file_list, batch_size = FLAGS.batch_size, scale = image_size)
+            train_images, train_labels = dataset_batcher.next()
             if i > 0 and i % (FLAGS.update_steps) == 0:
                 train_accuracy = accuracy.eval(session=sess, feed_dict={x: train_images, y_: train_labels, keep_prob: 1.0})
                 print("\tstep %d, training accuracy %g"%(i, train_accuracy))
@@ -62,12 +62,11 @@ with tf.Session() as sess:
         print "Model restored."
 
     if FLAGS.test:
-        print "Loading test dataset."
-        test_images, test_labels = load_dataset(glob(FLAGS.test_dir + "/*.jpg"), scale = image_size)
         print "Starting test."
         scores = list()
-        for i in xrange(0, len(test_images), FLAGS.batch_size):
-            score = accuracy.eval(session=sess, feed_dict={x: test_images[i:i+FLAGS.batch_size], y_: test_labels[i:i+FLAGS.batch_size], keep_prob: 1.0})
+        dataset_batcher = get_dataset_batcher(glob(FLAGS.test_dir + "/*.jpg"), batch_size = FLAGS.batch_size, scale = image_size, repeat = False)
+        for test_images, test_labels in dataset_batcher:
+            score = accuracy.eval(session=sess, feed_dict={x: test_images, y_: test_labels, keep_prob: 1.0})
             print("\ttest accuracy %g" % score)
             scores.append(score)
         print "Overall test accuracy %g" % (reduce(lambda x, y: x + y, scores) / len(scores))
@@ -76,8 +75,10 @@ with tf.Session() as sess:
         recreate("examples")
         pass_count = FLAGS.num_passing_test_examples
         fail_count = FLAGS.num_passing_test_examples
+        dataset_batcher = get_dataset_batcher(glob(FLAGS.test_dir + "/*.jpg"), batch_size=FLAGS.batch_size,
+                                              scale=image_size, repeat=False)
         while pass_count > 0 and fail_count > 0:
-            test_images, test_labels = load_dataset(glob(FLAGS.test_dir + "/*.jpg") , batch_size = FLAGS.batch_size, scale = image_size)
+            test_images, test_labels = dataset_batcher.next()
             correct = correct_prediction.eval(session=sess, feed_dict={
                 x: test_images, y_: test_labels, keep_prob: 1.0})
             for pass_image in compress(test_images, correct):

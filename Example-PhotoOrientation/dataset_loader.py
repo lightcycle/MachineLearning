@@ -17,8 +17,10 @@ def load_image(filepath, scale = None):
     return image
 
 
-def load_dataset(filename_list, batch_size = None, scale = None):
-    if batch_size is not None:
-        shuffle(filename_list)
-        filename_list = filename_list[:batch_size]
-    return map(partial(load_image, scale = scale), filename_list), map(get_label, filename_list)
+def get_dataset_batcher(filename_list, batch_size, scale = None, repeat = True):
+    shuffle(filename_list)
+    while True:
+        for filelist_batch in [filename_list[i:i + batch_size] for i in range(0, len(filename_list), batch_size)]:
+            yield map(partial(load_image, scale = scale), filelist_batch), map(get_label, filelist_batch)
+        if not repeat:
+            break;
