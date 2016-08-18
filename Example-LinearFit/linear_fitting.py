@@ -8,12 +8,12 @@ cricket_chirps_per_s = [20, 16, 19.8, 18.4, 17.1, 15.5, 14.7, 15.7, 15.4, 16.3, 
 X = tf.placeholder(tf.float32)
 Y = tf.placeholder(tf.float32)
 
-# Linear Model
+# Model (Linear)
 weight = tf.Variable(0., name = "weight")
 bias = tf.Variable(0., name = "bias")
 modeled_Y = tf.add(tf.mul(X, weight), bias)
 
-# Loss Function
+# Loss Function (Total Distance)
 loss = tf.reduce_sum(tf.squared_difference(Y, modeled_Y))
 
 # Training Operation
@@ -29,11 +29,13 @@ with tf.Session() as session:
     coord = tf.train.Coordinator()
     threads = tf.train.start_queue_runners(sess=session, coord=coord)
 
+    # Train model
     training_steps = 25
     for step in range(training_steps):
         _, total_loss_summary = session.run([training_op, loss_summary_op], feed_dict={X: temp_f, Y: cricket_chirps_per_s})
         writer.add_summary(total_loss_summary, step)
 
+    # Plot data and trained model
     plt.plot(temp_f, cricket_chirps_per_s, 'ro', label='Data')
     plt.plot(temp_f, session.run(modeled_Y, feed_dict={X: temp_f}), label='Trained Model')
     plt.show()
