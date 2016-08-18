@@ -48,7 +48,7 @@ with tf.Session() as session:
     coord = tf.train.Coordinator()
     threads = tf.train.start_queue_runners(sess=session, coord=coord)
 
-    training_steps = 50
+    training_steps = 25
     for step in range(training_steps):
         _, total_loss_summary = session.run([train_op, total_loss_summary_op])
         writer.add_summary(total_loss_summary, step)
