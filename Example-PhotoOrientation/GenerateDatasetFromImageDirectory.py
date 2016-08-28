@@ -38,3 +38,4 @@ examples = ExampleProducer(FLAGS.width, FLAGS.height, FLAGS.min_colors, image_da
 for image_data, label in examples:
     example = convert_to_example(image_data, label)
     writer.write(example)
+writer.close()

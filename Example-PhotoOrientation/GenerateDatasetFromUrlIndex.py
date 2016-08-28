@@ -38,3 +38,4 @@ for i in xrange(FLAGS.num):
     image_data, label = next(examples)
     example = convert_to_example(image_data, label)
     writer.write(example)
+writer.close()
