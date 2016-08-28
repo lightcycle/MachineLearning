@@ -9,7 +9,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string('index_file', 'images.lst', 'output directory')
 flags.DEFINE_string('dir', '.', 'output directory')
 flags.DEFINE_string('prefix', 'data', 'output directory')
-flags.DEFINE_integer('min_colors', 10000, 'minumum distinct colors in a usable example')
+flags.DEFINE_integer('min_colors', 1000, 'minumum distinct colors in a usable example')
 flags.DEFINE_integer('width', 100, 'example width')
 flags.DEFINE_integer('height', 100, 'example height')
 flags.DEFINE_integer('num', 10000, 'number of examples')

@@ -10,7 +10,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string('input_glob', 'images/*', 'input glob')
 flags.DEFINE_string('output_dir', '.', 'output directory')
 flags.DEFINE_string('prefix', 'data', 'output directory')
-flags.DEFINE_integer('min_colors', 10000, 'minumum distinct colors in a usable example')
+flags.DEFINE_integer('min_colors', 1000, 'minumum distinct colors in a usable example')
 flags.DEFINE_integer('width', 100, 'example width')
 flags.DEFINE_integer('height', 100, 'example height')
 flags.DEFINE_integer('shard_size', 1000, 'maximum number of examples in a shard')
