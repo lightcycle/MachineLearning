@@ -33,8 +33,7 @@ class ExampleProducer:
         return left, upper, right, lower
 
     def example_generator(self):
-        while True:
-            image_data = next(self.image_data_generator)
+        for image_data in self.image_data_generator:
             image = Image.open(StringIO.StringIO(image_data))
             if not self.__usable_image(image):
                 continue
