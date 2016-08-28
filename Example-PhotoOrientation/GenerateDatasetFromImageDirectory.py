@@ -22,8 +22,8 @@ def filenames(glob_pattern):
 
 def image_data(glob_pattern):
     for filename in filenames(glob_pattern):
-        file_filename = "file://" + os.path.abspath(filename)
-        yield urllib2.urlopen(file_filename).read()
+        url = "file://" + os.path.abspath(filename)
+        yield urllib2.urlopen(url).read()
 
 
 def convert_to_example(image, label):
