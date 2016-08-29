@@ -2,6 +2,7 @@ import StringIO
 from random import randint
 from PIL import Image
 
+
 class ExampleProducer:
 
     def __init__(self, width, height, min_colors, image_data_generator):

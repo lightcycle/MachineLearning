@@ -16,7 +16,7 @@ class ShardingTFWriter:
 
     def write(self, example):
         if self.count % self.shard_size == 0:
-            if self.writer != None:
+            if self.writer is not None:
                 self.writer.close()
             path = self.__get_path()
             print "Writing to " + path
@@ -26,7 +26,7 @@ class ShardingTFWriter:
         self.count += 1
 
     def close(self):
-        if self.writer != None:
+        if self.writer is not None:
             self.writer.close()
 
     def __get_path(self):
@@ -36,5 +36,6 @@ class ShardingTFWriter:
         filename = pattern.format(self.filename_prefix, index, total_files)
         return os.path.join(self.dir, filename)
 
-    def __ceil_div(self, num, denom):
+    @staticmethod
+    def __ceil_div(num, denom):
         return (num + denom // 2) // denom
