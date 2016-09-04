@@ -4,11 +4,12 @@ import tensorflow as tf
 
 class ShardingTFWriter:
 
-    def __init__(self, dir, filename_prefix, total_count, shard_size):
+    def __init__(self, dir, filename_prefix, total_count, shard_size, notify_every = 100):
         self.dir = dir
         self.filename_prefix = filename_prefix
         self.total_count = total_count
         self.shard_size = shard_size
+        self.notify_every = notify_every
         self.count = 0
         self.writer = None
         if not os.path.exists(self.dir):
@@ -22,8 +23,9 @@ class ShardingTFWriter:
             print "Writing to " + path
             self.writer = tf.python_io.TFRecordWriter(path)
         self.writer.write(example.SerializeToString())
-        print "Saved example " + str(self.count + 1)
         self.count += 1
+        if self.count % self.notify_every == 0:
+            print "Saved example " + str(self.count)
 
     def close(self):
         if self.writer is not None:
