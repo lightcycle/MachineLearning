@@ -21,11 +21,6 @@ flags.DEFINE_string('profile_training_batch', 'trace.json', 'if set, a Chrome tr
 
 dataset_loader = DatasetLoader()
 
-def recreate(dir):
-    if os.path.exists(dir):
-        shutil.rmtree(dir)
-    os.makedirs(dir)
-
 image_batch_holder = tf.placeholder(tf.uint8, shape = (None, 200, 200, 3))
 label_batch_holder = tf.placeholder(tf.int64, shape = (None, 4))
 keep_prob_holder = tf.placeholder(tf.float32, shape = ())
