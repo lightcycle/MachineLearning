@@ -39,7 +39,7 @@ class ExampleProducer:
             if not self.__usable_image(image):
                 continue
             image = image.crop(self.__center_crop_bounds(image))
-            image.thumbnail((self.width, self.height))
+            image.resize((self.width, self.height))
             angle = randint(0, 3) * 90
             image = image.rotate(angle)
             image_data = StringIO.StringIO()
