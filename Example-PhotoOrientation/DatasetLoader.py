@@ -14,7 +14,7 @@ class DatasetLoader:
                 'label': tf.FixedLenFeature([4], tf.int64)
             })
         image = tf.image.decode_jpeg(features['image'], channels=3)
-        image.set_shape([200, 200, 3]) # TODO: find a workaround using array_ops
+        image.set_shape([256, 256, 3]) # TODO: find a workaround using array_ops
         label = features['label']
         return image, label
 
