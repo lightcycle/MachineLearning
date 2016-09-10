@@ -38,10 +38,11 @@ class ExampleProducer:
             image = Image.open(StringIO.StringIO(image_data))
             if not self.__usable_image(image):
                 continue
-            image = image.crop(self.__center_crop_bounds(image))
-            image.resize((self.width, self.height))
             angle = randint(0, 3) * 90
-            image = image.rotate(angle)
             image_data = StringIO.StringIO()
-            image.save(image_data, 'JPEG')
+            image\
+                .crop(self.__center_crop_bounds(image))\
+                .resize((self.width, self.height))\
+                .rotate(angle)\
+                .save(image_data, 'JPEG')
             yield image_data.getvalue(), self.labels[angle]
