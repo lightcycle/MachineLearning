@@ -24,8 +24,10 @@ label_batch = tf.cast(label_batch, tf.float32)
 
 # Model, loss function, and training op
 inferred_labels = Model.create_graph(image_batch, keep_prob_holder)
-cross_entropy = tf.reduce_mean(-tf.reduce_sum(tf.cast(label_batch, tf.float32) * tf.log(inferred_labels), reduction_indices=[1]))
-training_op = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+cross_entropy = -tf.reduce_sum(tf.cast(label_batch, tf.float32) * tf.log(tf.maximum(inferred_labels, 1e-10)),
+                          reduction_indices=[1])
+batch_avg_cross_entropy = tf.reduce_mean(cross_entropy)
+training_op = tf.train.AdamOptimizer(1e-4).minimize(batch_avg_cross_entropy)
 
 # Run graph
 TFRunner.run(
