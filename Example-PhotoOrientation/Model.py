@@ -57,27 +57,17 @@ class Model:
 
         # Build model
         model = input_float
-        shape = (256, 256, 3)
-        model, shape = cls.__conv_layer(shape, model, 3, 3, 3, 4)
+        shape = (100, 100, 3)
+        model, shape = cls.__conv_layer(shape, model, 5, 5, 3, 32)
         model, shape = cls.__relu_layer(shape, model)
-        model, shape = cls.__maxpool_layer(shape, model, 2)
-        model, shape = cls.__conv_layer(shape, model, 3, 3, 4, 8)
-        model, shape = cls.__relu_layer(shape, model)
-        model, shape = cls.__maxpool_layer(shape, model, 2)
-        model, shape = cls.__conv_layer(shape, model, 3, 3, 8, 16)
-        model, shape = cls.__relu_layer(shape, model)
-        model, shape = cls.__maxpool_layer(shape, model, 2)
-        model, shape = cls.__conv_layer(shape, model, 3, 3, 16, 32)
-        model, shape = cls.__relu_layer(shape, model)
-        model, shape = cls.__maxpool_layer(shape, model, 2)
-        model, shape = cls.__conv_layer(shape, model, 3, 3, 32, 64)
+        model, shape = cls.__maxpool_layer(shape, model, 5)
+        model, shape = cls.__conv_layer(shape, model, 5, 5, 32, 64)
         model, shape = cls.__relu_layer(shape, model)
         model, shape = cls.__maxpool_layer(shape, model, 2)
         model, shape = cls.__fully_connected_layer(shape, model, 128)
         model, shape = cls.__relu_layer(shape, model)
         model, shape = cls.__dropout(shape, model, keep_prob)
         model, shape = cls.__fully_connected_layer(shape, model, 4)
-        model, shape = cls.__relu_layer(shape, model)
         model, shape = cls.__softmax(shape, model)
 
         return model

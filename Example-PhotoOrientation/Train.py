@@ -7,8 +7,8 @@ from Model import Model
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
-flags.DEFINE_integer('training_epochs', 30, 'number of times to run through training dataset')
-flags.DEFINE_integer('batch_size', 100, 'batch size')
+flags.DEFINE_integer('training_epochs', 20, 'number of times to run through training dataset')
+flags.DEFINE_integer('batch_size', 50, 'batch size')
 flags.DEFINE_string('train_files_glob', './input/train*.tfrecords', 'glob for TFRecords files containing training data')
 flags.DEFINE_string('model_file', './model.ckpt', 'path to save or load trained model parameters')
 flags.DEFINE_integer('read_threads', multiprocessing.cpu_count(), 'number of reading threads')
