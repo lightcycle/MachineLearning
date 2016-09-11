@@ -46,6 +46,11 @@ class Model:
                input_shape
 
     @classmethod
+    def __softmax(cls, input_shape, model):
+        return tf.nn.softmax(model), \
+               input_shape
+
+    @classmethod
     def create_graph(cls, input, keep_prob):
         # Normalize [0,255] ints to [0,1] floats
         input_float = tf.div(tf.cast(input, tf.float32), 255)
@@ -73,5 +78,6 @@ class Model:
         model, shape = cls.__dropout(shape, model, keep_prob)
         model, shape = cls.__fully_connected_layer(shape, model, 4)
         model, shape = cls.__relu_layer(shape, model)
+        model, shape = cls.__softmax(shape, model)
 
         return model
