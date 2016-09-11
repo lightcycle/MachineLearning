@@ -29,11 +29,18 @@ cross_entropy = -tf.reduce_sum(tf.cast(label_batch, tf.float32) * tf.log(tf.maxi
 batch_avg_cross_entropy = tf.reduce_mean(cross_entropy)
 training_op = tf.train.AdamOptimizer(1e-4).minimize(batch_avg_cross_entropy)
 
+# Add loss and training accuracy to Tensorboard output
+correct_prediction = tf.equal(tf.argmax(inferred_labels, 1), tf.argmax(tf.cast(label_batch, tf.float32), 1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+tf.scalar_summary("loss", batch_avg_cross_entropy)
+tf.scalar_summary("training accuracy", accuracy)
+
 # Run graph
 TFRunner.run(
     training_op,
     feed_dict = {keep_prob_holder: 0.5},
     save_checkpoint = FLAGS.model_file,
     profile = FLAGS.profile,
-    summary = FLAGS.summary
+    summary = FLAGS.summary,
+    summary_every = 10
 )
