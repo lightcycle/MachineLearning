@@ -16,6 +16,7 @@ class TFRunner:
         cls.__restore_checkpoint(sess, saver, restore_checkpoint)
 
         # Create a summary writer
+        merged_summary = tf.merge_all_summaries()
         summary_writer = tf.train.SummaryWriter(summary, sess.graph) if summary else None
 
         # Start queue runners responsible for loading data
@@ -30,10 +31,13 @@ class TFRunner:
         batch = 1
         try:
             while not coord.should_stop():
-                batch_result = sess.run(op, feed_dict = feed_dict, options = run_options, run_metadata = run_metadata)
+                if summary_writer and batch % summary_every == 0:
+                    batch_result, batch_summary = sess.run([op, merged_summary], feed_dict=feed_dict, options=run_options, run_metadata=run_metadata)
+                    summary_writer.add_summary(batch_summary, batch)
+                else:
+                    batch_result = sess.run(op, feed_dict=feed_dict, options=run_options, run_metadata=run_metadata)
                 cls.__handle_batch_result(batch_result, batch_result_callback)
                 cls.__write_terminal_update(batch, notify_every)
-                cls.__write_summary(batch, sess, summary_every, summary_writer)
                 cls.__write_profile(batch, profile, run_metadata)
                 batch += 1
         except tf.errors.OutOfRangeError:
@@ -67,11 +71,6 @@ class TFRunner:
                 trace = tl.generate_chrome_trace_format()
                 f.write(trace)
             print 'CPU profiling trace of first batch written to ' + profile
-
-    @classmethod
-    def __write_summary(cls, batch, sess, summary_every, summary_writer):
-        if summary_writer and batch % summary_every == 0:
-            summary_writer.add_summary(sess.run(tf.merge_all_summaries()))
 
     @classmethod
     def __write_terminal_update(cls, batch, notify_every):
