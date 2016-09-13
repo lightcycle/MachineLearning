@@ -20,14 +20,14 @@ class DatasetLoader:
         return image, label
 
     @classmethod
-    def threaded_readers(cls, filenames, read_threads, num_epochs = None, shuffle = False):
+    def threaded_readers(cls, filenames, read_threads, num_epochs = 1,  shuffle = False):
         filename_queue = tf.train.string_input_producer(filenames, num_epochs = num_epochs, shuffle = shuffle)
         return [cls.__file_reader(filename_queue) for _ in range(read_threads)]
 
     @classmethod
     def input_shuffle_batch(cls, filenames, batch_size, read_threads, num_epochs = None, min_after_dequeue = 200):
         with tf.name_scope('training_input_pipeline'):
-            readers = cls.threaded_readers(filenames, read_threads, num_epochs, True, name = 'training_filename_queue')
+            readers = cls.threaded_readers(filenames, read_threads, num_epochs, True)
             capacity = min_after_dequeue + 3 * batch_size
             image_batch, label_batch = tf.train.shuffle_batch_join(
                 readers, batch_size = batch_size, capacity = capacity, min_after_dequeue = min_after_dequeue)
@@ -36,7 +36,7 @@ class DatasetLoader:
     @classmethod
     def input_batch(cls, filenames, batch_size, read_threads):
         with tf.name_scope('testing_input_pipeline'):
-            readers = cls.threaded_readers(filenames, read_threads, 1)
+            readers = cls.threaded_readers(filenames, read_threads)
             image_batch, label_batch = tf.train.batch_join(readers, batch_size = batch_size, capacity = 3 * batch_size)
             return image_batch, label_batch
 
