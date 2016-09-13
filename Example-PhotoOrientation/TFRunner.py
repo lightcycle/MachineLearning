@@ -12,7 +12,8 @@ class TFRunner:
         sess.run(tf.initialize_all_variables())
 
         # Restore variable values from a checkpoint file
-        saver = tf.train.Saver() if restore_checkpoint or save_checkpoint else None
+        var_list = [v for v in tf.get_collection(tf.GraphKeys.VARIABLES) if 'limit_epochs' not in v.name]
+        saver = tf.train.Saver(var_list = var_list) if restore_checkpoint or save_checkpoint else None
         cls.__restore_checkpoint(sess, saver, restore_checkpoint)
 
         # Create a summary writer
