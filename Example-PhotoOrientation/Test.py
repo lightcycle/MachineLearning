@@ -10,7 +10,7 @@ flags = tf.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_integer('batch_size', 100, 'batch size')
 flags.DEFINE_string('test_files_glob', './input/test*.tfrecords', 'glob for TFRecords files containing testing data')
-flags.DEFINE_string('model_file', './model.ckpt', 'path to save or load trained model parameters')
+flags.DEFINE_string('model_file', './model.ckpt', 'path to load trained model parameters from')
 flags.DEFINE_integer('read_threads', multiprocessing.cpu_count(), 'number of reading threads')
 flags.DEFINE_string('profile', 'trace_test.json', 'a Chrome trace file will be written at the specified path for the first training batch')
 flags.DEFINE_string('summary', './tensorboard_test', 'Tensorboard output directory')
