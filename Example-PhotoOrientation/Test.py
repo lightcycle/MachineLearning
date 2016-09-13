@@ -19,7 +19,7 @@ flags.DEFINE_string('summary', './tensorboard_test', 'Tensorboard output directo
 dataset_loader = DatasetLoader()
 keep_prob_holder = tf.placeholder(tf.float32, shape = ())
 image_batch, label_batch = dataset_loader.input_batch(
-    glob(FLAGS.test_files_glob), FLAGS.batch_size, FLAGS.read_threads, num_epochs = 2)
+    glob(FLAGS.test_files_glob), FLAGS.batch_size, FLAGS.read_threads)
 label_batch = tf.cast(label_batch, tf.float32)
 
 # Model, correctness predicate, and correctness aggregator
