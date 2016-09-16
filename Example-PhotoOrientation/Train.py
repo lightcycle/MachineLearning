@@ -12,7 +12,7 @@ flags.DEFINE_integer('batch_size', 50, 'batch size')
 flags.DEFINE_string('train_files_glob', './input/train*.tfrecords', 'glob for TFRecords files containing training data')
 flags.DEFINE_string('model_file', './model.ckpt', 'path to save trained model parameters to')
 flags.DEFINE_integer('read_threads', multiprocessing.cpu_count(), 'number of reading threads')
-flags.DEFINE_string('profile', 'trace_train.json', 'a Chrome trace file will be written at the specified path for the first training batch')
+flags.DEFINE_string('profile', None, 'a Chrome trace file will be written at the specified path for the first training batch')
 flags.DEFINE_string('summary', './tensorboard_train', 'Tensorboard output directory')
 
 # Training input
