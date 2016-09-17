@@ -15,7 +15,7 @@ class DatasetLoader:
             })
         image = tf.image.decode_jpeg(features['image'], channels=3)
         image.set_shape([256, 256, 3]) # TODO: find a workaround using array_ops
-        image = tf.image.resize_images(image, 100, 100)
+        image = tf.image.resize_images(image, 256, 256)
         label = features['label']
         return image, label
 

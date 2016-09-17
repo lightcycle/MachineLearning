@@ -15,8 +15,8 @@ class Model:
         return tf.Variable(initial)
 
     @classmethod
-    def __conv_layer(cls, input_shape, input, k_width, k_height, k_depth, num_outputs):
-        weight = cls.__weight_variable([k_width, k_height, k_depth, num_outputs])
+    def __conv_layer(cls, input_shape, input, k_width, k_height, num_outputs):
+        weight = cls.__weight_variable([k_width, k_height, input_shape[2], num_outputs])
         bias = cls.__bias_variable([num_outputs])
         return tf.nn.conv2d(input, weight, strides=[1, 1, 1, 1], padding='SAME') + bias,\
                (input_shape[0], input_shape[1], num_outputs)
@@ -57,14 +57,23 @@ class Model:
 
         # Build model
         model = input_float
-        shape = (100, 100, 3)
-        model, shape = cls.__conv_layer(shape, model, 5, 5, 3, 32)
-        model, shape = cls.__relu_layer(shape, model)
-        model, shape = cls.__maxpool_layer(shape, model, 5)
-        model, shape = cls.__conv_layer(shape, model, 5, 5, 32, 64)
+        shape = (256, 256, 3)
+        model, shape = cls.__conv_layer(shape, model, 3, 3, 16)
         model, shape = cls.__relu_layer(shape, model)
         model, shape = cls.__maxpool_layer(shape, model, 2)
-        model, shape = cls.__fully_connected_layer(shape, model, 128)
+        model, shape = cls.__conv_layer(shape, model, 3, 3, 32)
+        model, shape = cls.__relu_layer(shape, model)
+        model, shape = cls.__maxpool_layer(shape, model, 2)
+        model, shape = cls.__conv_layer(shape, model, 3, 3, 48)
+        model, shape = cls.__relu_layer(shape, model)
+        model, shape = cls.__maxpool_layer(shape, model, 2)
+        model, shape = cls.__conv_layer(shape, model, 3, 3, 64)
+        model, shape = cls.__relu_layer(shape, model)
+        model, shape = cls.__maxpool_layer(shape, model, 2)
+        model, shape = cls.__conv_layer(shape, model, 3, 3, 80)
+        model, shape = cls.__relu_layer(shape, model)
+        model, shape = cls.__maxpool_layer(shape, model, 2)
+        model, shape = cls.__fully_connected_layer(shape, model, 160)
         model, shape = cls.__relu_layer(shape, model)
         model, shape = cls.__dropout(shape, model, keep_prob)
         model, shape = cls.__fully_connected_layer(shape, model, 4)
