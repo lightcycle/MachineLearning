@@ -54,4 +54,14 @@ Once a model.ckpt file is ready, its accuracy can be determined with:
 
 This script also writes Tensorboard output, to the 'tensorboard_test' directory. This output includes examples of images for which inference was correct and incorrect.
 
+### Live Demo
+
+The 'demo' directory contains a simple web app that captures webcam images, and runs inference using the model via a REST service. A 'model.ckpt' file with saved model parameters is expected to be in the sibling 'train' directory.
+
+`gunicorn Demo:app`
+
+The orange arrows are brightened in proportion to how much the model thinks each is the "up" direction in the photo.
+
+[TensorFlow Serving](https://tensorflow.github.io/serving) offers a more efficient platform for exposing trained models as service. But the process is far from trivial, depends on Google tools (Bazel, gRPC, protobuf), and only builds on Linux. Further, the available documentation seems to be out of date. After several hours trying to build with Bazel in a Docker container on OSX I just (╯°□°）╯︵ ┻━┻.
+
 ![Alt text](http://lightcycle.github.io/screenshots/PhotoOrientation.png "Photo Orientation Demo Screenshot")
