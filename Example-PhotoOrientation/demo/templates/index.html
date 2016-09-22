@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>TensorFlow Demo - Photo Orientation</title>
+	<style type="text/css">
+		body { font-family: Helvetica, sans-serif; background: #333; }
+		h1 { color: #ccc; }
+	</style>
+</head>
+<body>
+	<h1>TensorFlow Demo - Photo Orientation</h1>
+	<div id="results">Your captured image will appear here...</div>
+	<div id="my_camera"></div>
+
+	<script type="text/javascript" src="static/webcam.js"></script>
+
+	<script language="JavaScript">
+		Webcam.set({
+			width: 344,
+			height: 258,
+			image_format: 'jpeg',
+			jpeg_quality: 100
+		});
+		Webcam.attach('#my_camera');
+	</script>
+
+	<script language="JavaScript">
+		function take_snapshot() {
+			Webcam.snap( function(data_uri) {
+				Webcam.upload(data_uri, '/api/photo_orientation', function(code, text) {
+					document.getElementById('results').innerHTML = text;
+	        		take_snapshot();
+       			})
+			});
+		}
+
+		Webcam.on('live', take_snapshot);
+	</script>
+
+</body>
+</html>
