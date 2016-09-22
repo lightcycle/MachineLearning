@@ -32,4 +32,26 @@ The 'dataset' directory contains utility scripts for producing files for trainin
 2. Extract the datasets and use some command-line-fu to randomly split the images into two directories, 20% for testing and the rest for training. [shuf](https://linux.die.net/man/1/shuf) is useful here.
 3. Process each directory with `python GenerateDatasetFromImages.py --input_glob=<dir>/* --output_dir=<output_dir> --prefix=<train_or_test>`
 
+### Training and Testing the Model
+
+The 'train' directory contains scripts for training and testing the model.
+
+#### Training
+
+The training settings that produced the included 'model.ckpt' file were:
+
+`python Train.py --training_epochs=40 --batch_size=100 --train_files_glob=<dir>/*`
+
+When complete, the trained parameters will be written to 'model.ckpt'. Tensorboard output showing training progress will be written to the 'tensorboard_train' directory, and can be viewed with `tensorboard --logdir=tensorboard_train`.
+
+The optional `--profile` parameter takes a path, and if set will write a JSON trace file showing performance for the first training batch. This file can be viewed with the Chrome tracing tool.
+
+#### Testing
+
+Once a model.ckpt file is ready, its accuracy can be determined with:
+
+`python Test.py --test_files_glob=<dir>/*`
+
+This script also writes Tensorboard output, to the 'tensorboard_test' directory. This output includes examples of images for which inference was correct and incorrect.
+
 ![Alt text](http://lightcycle.github.io/screenshots/PhotoOrientation.png "Photo Orientation Demo Screenshot")
