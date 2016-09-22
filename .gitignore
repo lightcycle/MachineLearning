@@ -1,6 +1,5 @@
 .idea
 *.pyc
-*.ckpt
 *.ckpt.meta
 checkpoint
 *.lst
