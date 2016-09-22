@@ -27,6 +27,7 @@ The included 'model.ckpt' file contains saved parameters for a trained model, wh
 The 'dataset' directory contains utility scripts for producing files for training the model. Files are produced in the TFRecords protobuf format, and contain both the input photograph and the rotation label. Each photograph is randomly rotated, scaled and cropped to 256&times;256, and stored in JPEG format.
 
 'GenerateDatasetFromImages.py' is the easiest option:
+
 1. Download the [Microsoft COCO](http://mscoco.org/dataset/#download) datasets.
 2. Extract the datasets and use some command-line-fu to randomly split the images into two directories, 20% for testing and the rest for training. [shuf](https://linux.die.net/man/1/shuf) is useful here.
 3. Process each directory with `python GenerateDatasetFromImages.py --input_glob=<dir>/* --output_dir=<output_dir> --prefix=<train_or_test>`
