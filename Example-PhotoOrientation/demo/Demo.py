@@ -31,7 +31,6 @@ def process_jpeg(stream):
 @app.route('/api/photo_orientation', methods=['POST'])
 def infer_photo_orientation():
     f = request.files['webcam']
-    f.save('test.jpg')
     image = process_jpeg(f.stream)
     result = infer(image)
     return jsonify(results = result)
