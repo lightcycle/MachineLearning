@@ -7,13 +7,20 @@
 	<style type="text/css">
 		body { font-family: Helvetica, sans-serif; background: #333; }
 		h1 { color: #ccc; }
+		#up, #right, #down, #left { font-weight: bold; font-size: 64px; color: #f90; }
 	</style>
 </head>
 <body>
 	<h1>TensorFlow Demo - Photo Orientation</h1>
-	<div id="results">Your captured image will appear here...</div>
+	<h2>Input</h2>
 	<div id="my_camera"></div>
+	<h2>Output</h2>
+	<span id="up">&uarr;</span>
+	<span id="right">&rarr;</span>
+	<span id="down">&darr;</span>
+	<span id="left">&larr;</span>
 
+	<script type="text/javascript" src="static/jquery-3.1.0.min.js"></script>
 	<script type="text/javascript" src="static/webcam.js"></script>
 
 	<script language="JavaScript">
@@ -30,7 +37,11 @@
 		function take_snapshot() {
 			Webcam.snap( function(data_uri) {
 				Webcam.upload(data_uri, '/api/photo_orientation', function(code, text) {
-					document.getElementById('results').innerHTML = text;
+					res = JSON.parse(text)
+					$('#up').css({'opacity': Number(res.results[0])});
+					$('#right').css({'opacity': Number(res.results[3])});
+					$('#down').css({'opacity': Number(res.results[2])});
+					$('#left').css({'opacity': Number(res.results[1])});
 	        		take_snapshot();
        			})
 			});
