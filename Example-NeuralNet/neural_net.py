@@ -23,13 +23,17 @@ training_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 with tf.Session() as session:
     tf.initialize_all_variables().run()
 
+    writer = tf.train.SummaryWriter("./tensorboard", session.graph)
+    loss_summary_op = tf.scalar_summary("total_loss", loss)
+
     coord = tf.train.Coordinator()
     threads = tf.train.start_queue_runners(sess=session, coord=coord)
 
     # Train model
     training_steps = 25
     for step in range(training_steps):
-        session.run([training_op], feed_dict={X: temp_f, Y: cricket_chirps_per_s})
+        _, total_loss_summary = session.run([training_op, loss_summary_op], feed_dict={X: temp_f, Y: cricket_chirps_per_s})
+        writer.add_summary(total_loss_summary, step)
 
     # Plot data and trained model
     plt.plot(temp_f, cricket_chirps_per_s, 'ro', label='Data')
@@ -38,4 +42,5 @@ with tf.Session() as session:
 
     coord.request_stop()
     coord.join(threads)
+    writer.close()
     session.close()
