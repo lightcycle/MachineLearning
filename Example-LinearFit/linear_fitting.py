@@ -23,8 +23,6 @@ training_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 with tf.Session() as session:
     tf.initialize_all_variables().run()
 
-    coord = tf.train.Coordinator()
-    threads = tf.train.start_queue_runners(sess=session, coord=coord)
 
     # Train model
     training_steps = 25
@@ -36,6 +34,3 @@ with tf.Session() as session:
     plt.plot(temp_f, session.run(modeled_Y, feed_dict={X: temp_f}), label='Trained Model')
     plt.show()
 
-    coord.request_stop()
-    coord.join(threads)
-    session.close()
