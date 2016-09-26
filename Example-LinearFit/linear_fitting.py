@@ -23,7 +23,6 @@ training_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 with tf.Session() as session:
     tf.initialize_all_variables().run()
 
-
     # Train model
     training_steps = 25
     for step in range(training_steps):
