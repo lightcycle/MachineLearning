@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      img { width: 60%; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: left, middle
+
+# Machine Learning with TensorFlow
+
+Mike Davis (mike.davis@asynchrony.com)
+
+Example Code at [https://github.com/lightcycle/MachineLearningWithTensorFlow](https://github.com/lightcycle/MachineLearningWithTensorFlow)
+
+
+---
+
+# What is Machine Learning?
+
++ Methods for finding structure in or making predictions from data without explicitly programmed logic
+
++ Examples:
+ + Image classification
+ + Speech to text
+ + Natural language processing
+ + Spam detection
+ + Recommendation engines
+
+--
+
+## Unsupervised vs. Supervised
+
++ Unsupervised methods find structure in unlabeled data
++ Supervised methods find a predictive function that fits provided input and output data
++ We'll focus on supervised learning
+
+---
+
+# Components of a Supervised Learning Solution
+
+Supervised learning setups commonly include these components:
+
++ A **model function** mapping inputs to outputs, including configurable **parameters** that alter how the model works.
+
++ A **loss function** that quantifies how accurate the model is for given parameters, inputs, and outputs
+
++ An **optimization algorithm** that repeatedly tweaks the parameters and evaluates the loss function to improve the accuracy of the model
+
+---
+
+layout: true
+
+# Example: Linear Regression
+
+---
+
+Imagine we have these measurements of cricket chirp frequency at certain temperatures:
+
+.center[
+![Dataset: Temp vs. Cricket Chirps](images/linear_model_data.png "Dataset: Temp vs. Cricket Chirps")]
+
+It looks likely that there is a linear relationship.
+
+---
+
+## Model
+Since we think there's a linear relationship, our model is the equation for a line:
+
+.center[_predicted_outputs = weight * inputs + bias_]
+
+## Parameters
+_weight_ and _bias_ are the parameters for this model, controlling the slope and altitude of the line.
+
+
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
