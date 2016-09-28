@@ -16,7 +16,13 @@
 
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
 
-      img { width: 60%; }
+      img { width: 75%; }
+
+      .footnote {
+        font-size: smaller;
+        background: #eee;
+        padding: 0.1% 3%;
+      }
     </style>
   </head>
   <body>
@@ -77,8 +83,6 @@ Imagine we have these measurements of cricket chirp frequency at certain tempera
 .center[
 ![Dataset: Temp vs. Cricket Chirps](images/linear_model_data.png "Dataset: Temp vs. Cricket Chirps")]
 
-It looks likely that there is a linear relationship.
-
 ---
 
 ## Model
@@ -87,8 +91,41 @@ Since we think there's a linear relationship, our model is the equation for a li
 .center[_predicted_outputs = weight * inputs + bias_]
 
 ## Parameters
-_weight_ and _bias_ are the parameters for this model, controlling the slope and altitude of the line.
+* _weight_ controls the slope of the line
+* _bias_ shifts the line up and down
 
+---
+
+## Loss Function
+Mean squared error (MSE) is a common choice for regression loss functions. For each input temperature, we'll square the difference between the model's predicted chirp frequency and the measured chirp frequency. Then we'll take the average of those squared differences.
+
+.center[_loss = average of (predicted_output - output)<sup>2</sup>_]
+
+Squaring the differences has the effect of:
+* Ensuring that the loss is positive
+* Penalizing outliers
+
+---
+
+## Optimization Algorithm
+
+Our optimization algorithm needs to determine the _weight_ and _bias_ values that result in a line best fitting our data.
+
+Most algorithms perform **gradient descent**:
+1. Start from a reasonable, random set of parameter values
+2. Use partial derivatives of the loss function over each parameter to determine the direction most likely to result in improvement
+3. Update the parameters slightly in the determined direction and repeat at step 2.
+
+.footnote[
+Note: Linear regression is a silly example for machine learning, since we could simply solve for the minimum of the loss function. But this isn't possible for more complex models with thousands of parameters.
+]
+
+---
+
+.center[
+![Plot: Linear Regression Loss](images/linear_model_parameters_surface.png "Plot: Linear Regression Loss")]
+
+Starting from a random spot on this surface, gradient descent will eventually discover the optimal parameters.
 
     </textarea>
     <script src="js/remark-latest.min.js">
