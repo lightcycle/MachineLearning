@@ -13,18 +13,18 @@ weight = tf.Variable(0., name = "weight")
 bias = tf.Variable(0., name = "bias")
 modeled_Y = tf.add(tf.mul(X, weight), bias)
 
-# Loss Function (Total Distance)
-loss = tf.reduce_sum(tf.squared_difference(Y, modeled_Y))
+# Loss Function (Mean Squared Error)
+loss = tf.reduce_mean(tf.squared_difference(Y, modeled_Y))
 
 # Training Operation
-learning_rate = 0.000001
+learning_rate = 0.0001
 training_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 
 with tf.Session() as session:
     tf.initialize_all_variables().run()
 
     # Train model
-    training_steps = 25
+    training_steps = 50
     for step in range(training_steps):
         session.run([training_op], feed_dict={X: temp_f, Y: cricket_chirps_per_s})
 
