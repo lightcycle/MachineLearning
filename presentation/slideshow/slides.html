@@ -111,13 +111,13 @@ Squaring the differences has the effect of:
 
 Our optimization algorithm needs to determine the _weight_ and _bias_ values that result in a line best fitting our data.
 
-Most algorithms perform **gradient descent**:
+**Gradient descent** is a common strategy:
 1. Start from a reasonable, random set of parameter values
-2. Use partial derivatives of the loss function over each parameter to determine the direction most likely to result in improvement
+2. Determine the direction most likely to result in improvement, using partial derivatives of the loss function over each parameter 
 3. Update the parameters slightly in the determined direction and repeat at step 2.
 
 .footnote[
-Note: Linear regression is a silly example for machine learning, since we could simply solve for the minimum of the loss function. But this isn't possible for more complex models with thousands of parameters.
+Note: Linear regression is a silly example for machine learning, since we could simply solve for the minimum of the loss function. But this isn't practical for more complex models with thousands of parameters.
 ]
 
 ---
@@ -126,6 +126,28 @@ Note: Linear regression is a silly example for machine learning, since we could 
 ![Plot: Linear Regression Loss](images/linear_model_parameters_surface.png "Plot: Linear Regression Loss")]
 
 Starting from a random spot on this surface, gradient descent will eventually discover the optimal parameters.
+
+---
+
+layout: false
+
+# TensorFlow Introduction
+
+TensorFlow is Google's open-sourced library for these kinds of computations, first released Nov 2015.
+
+Similar popular libraries are Theano, Torch, and Caffe. More recently released libraries include CNTK (Microsoft) and DSSTNE (Amazon).
+
+--
+
+With TensorFlow:
++ Data is stored in _n_-dimensional arrays called **tensors**
+ + 0D are scalars
+ + 1D are vectors
+ + 2D are matrices
+ + etc
++ Computations are defined as a **data flow graph** passing tensors between mathematical operations
+ + Graph defined in a high-level language (only Python currently)
+ + Graph computed by native code for performance
 
     </textarea>
     <script src="js/remark-latest.min.js">
