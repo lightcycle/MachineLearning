@@ -241,6 +241,50 @@ Additional features that take advantage of the graph include:
 + Distributing execution over multiple machines
 + Exporting trained model for use in production
 
+---
+
+layout: true
+
+# Example: Neural Net
+
+---
+
+Neural net models are composed of nodes inspired by biological neurons:
+
+.center[
+![Diagram: Artificial Neuron](images/artificial_neuron.png "Diagram: Artificial Neuron")
+]
+
+Each input node's value is multiplied by a separate weight parameter, and the result is summed together with a bias parameter.
+
+Finally, the result is transformed by an **activation function**.
+
+.footnote[
+Note: The activation function introduces _non-linearity_. Without it, the math performed by the node (or even a network of nodes) could be algebraically reduced to a simple linear equation. Which would produce a convoluted linear regression model.
+]
+
+---
+
+The activation function can be anything, but two common choices are the _sigmoid_ and _rectified linear units (ReLU)_ functions.
+
+.center[
+![Plot: Activation Functions](images/activation_functions.png "Plot: Activation Functions")
+]
+
+---
+
+Neural networks are constructed with one or more hidden layers of nodes between the input nodes and output nodes.
+
+.center[
+![Diagram: Neural Network](images/neural_network.png "Diagram: Neural Network")
+]
+
+Each hidden layer essentially combines instances of the activation function shape, scaled and shifted by node weights and bias.
+
+.footnote[
+The _universal approximation theorem_ shows that with an appropriate activation function and enough nodes, a single layer can approximate any function.
+]
+
     </textarea>
     <script src="js/remark-latest.min.js">
     </script>
