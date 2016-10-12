@@ -8,7 +8,7 @@ fig, ((ax)) = plt.subplots(1, 1)
 x = np.arange(-5, 5, 0.1)
 
 # Plot sigmoid
-sigmoid = lambda x: 1/(1+np.exp(x))
+sigmoid = lambda x: 1/(1+np.exp(-x))
 sig_line, = ax.plot(x, sigmoid(x), label = "Sigmoid")
 
 # Plot ReLU
