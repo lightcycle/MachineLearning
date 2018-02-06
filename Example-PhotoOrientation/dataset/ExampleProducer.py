@@ -1,4 +1,4 @@
-import StringIO
+import io
 from random import randint
 from PIL import Image
 
@@ -35,11 +35,11 @@ class ExampleProducer:
 
     def example_generator(self):
         for image_data in self.image_data_generator:
-            image = Image.open(StringIO.StringIO(image_data))
+            image = Image.open(io.BytesIO(image_data))
             if not self.__usable_image(image):
                 continue
             angle = randint(0, 3) * 90
-            image_data = StringIO.StringIO()
+            image_data = io.BytesIO()
             image\
                 .crop(self.__center_crop_bounds(image))\
                 .resize((self.width, self.height))\

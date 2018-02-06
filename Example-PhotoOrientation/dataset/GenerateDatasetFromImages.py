@@ -1,7 +1,7 @@
 import os
-import urllib2
 import tensorflow as tf
 from glob import glob
+from urllib.request import urlopen
 from ShardingTFWriter import ShardingTFWriter
 from ExampleProducer import ExampleProducer
 
@@ -23,7 +23,7 @@ def filenames(glob_pattern):
 def image_data(glob_pattern):
     for filename in filenames(glob_pattern):
         url = "file://" + os.path.abspath(filename)
-        yield urllib2.urlopen(url).read()
+        yield urlopen(url).read()
 
 
 def convert_to_example(image, label):

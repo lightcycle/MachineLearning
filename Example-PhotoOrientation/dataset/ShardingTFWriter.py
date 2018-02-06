@@ -20,12 +20,12 @@ class ShardingTFWriter:
             if self.writer is not None:
                 self.writer.close()
             path = self.__get_path()
-            print "Writing to " + path
+            print("Writing to " + path)
             self.writer = tf.python_io.TFRecordWriter(path)
         self.writer.write(example.SerializeToString())
         self.count += 1
         if self.count % self.notify_every == 0:
-            print "Saved example " + str(self.count)
+            print("Saved example " + str(self.count))
 
     def close(self):
         if self.writer is not None:
