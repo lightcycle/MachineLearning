@@ -1,5 +1,6 @@
 import tensorflow as tf
 from operator import mul
+from functools import reduce
 
 
 class Model:
@@ -33,7 +34,7 @@ class Model:
 
     @classmethod
     def __fully_connected_layer(cls, input_shape, input, num_outputs):
-        flattened_size = reduce(mul, input_shape, 1)
+        flattened_size = int(reduce(mul, input_shape, 1))
         weight = cls.__weight_variable([flattened_size, num_outputs])
         bias = cls.__bias_variable([num_outputs])
         input_flat = tf.reshape(input, [-1, flattened_size])

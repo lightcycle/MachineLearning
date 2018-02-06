@@ -32,8 +32,8 @@ training_op = tf.train.AdamOptimizer(1e-4).minimize(batch_avg_cross_entropy)
 # Add loss and training accuracy to Tensorboard output
 correct_prediction = tf.equal(tf.argmax(inferred_labels, 1), tf.argmax(tf.cast(label_batch, tf.float32), 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-tf.scalar_summary("loss", batch_avg_cross_entropy)
-tf.scalar_summary("training accuracy", accuracy)
+tf.summary.scalar("loss", batch_avg_cross_entropy)
+tf.summary.scalar("training accuracy", accuracy)
 
 # Run graph
 TFRunner.run(

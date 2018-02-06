@@ -9,16 +9,17 @@ class TFRunner:
         sess = tf.Session()
 
         # Initialize variables defined in the graph so far
-        sess.run(tf.initialize_all_variables())
+        init_op = tf.group(tf.initialize_all_variables(), tf.initialize_local_variables())
+        sess.run(init_op)
 
         # Restore variable values from a checkpoint file
-        var_list = [v for v in tf.get_collection(tf.GraphKeys.VARIABLES) if 'limit_epochs' not in v.name]
+        var_list = [v for v in tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES) if 'limit_epochs' not in v.name]
         saver = tf.train.Saver(var_list = var_list) if restore_checkpoint or save_checkpoint else None
         cls.__restore_checkpoint(sess, saver, restore_checkpoint)
 
         # Create a summary writer
-        merged_summary = tf.merge_all_summaries()
-        summary_writer = tf.train.SummaryWriter(summary, sess.graph) if summary else None
+        merged_summary = tf.summary.merge_all()
+        summary_writer = tf.summary.FileWriter(summary, sess.graph) if summary else None
 
         # Start queue runners responsible for loading data
         coord = tf.train.Coordinator()
@@ -28,7 +29,7 @@ class TFRunner:
         run_options, run_metadata = cls.__profile_options(profile)
 
         # Run graph
-        print 'Running graph...'
+        print('Running graph...')
         batch = 1
         try:
             while not coord.should_stop():
@@ -42,7 +43,7 @@ class TFRunner:
                 cls.__write_profile(batch, profile, run_metadata)
                 batch += 1
         except tf.errors.OutOfRangeError:
-            print 'Done running graph.'
+            print('Done running graph.')
         finally:
             coord.request_stop()
 
@@ -71,24 +72,24 @@ class TFRunner:
                 tl = timeline.Timeline(run_metadata.step_stats)
                 trace = tl.generate_chrome_trace_format()
                 f.write(trace)
-            print 'CPU profiling trace of first batch written to ' + profile
+            print('CPU profiling trace of first batch written to ' + profile)
 
     @classmethod
     def __write_terminal_update(cls, batch, notify_every):
         if batch % notify_every == 0:
-            print 'Finished batch ' + str(batch)
+            print('Finished batch ' + str(batch))
 
     @classmethod
     def __restore_checkpoint(cls, sess, saver, restore_checkpoint):
         if restore_checkpoint is not None:
             saver.restore(sess, restore_checkpoint)
-            print 'Restoring model from ' + restore_checkpoint
+            print('Restoring model from ' + restore_checkpoint)
 
     @classmethod
     def __save_checkpoint(cls, sess, saver, save_checkpoint):
         if save_checkpoint is not None:
             saver.save(sess, save_checkpoint)
-            print 'Saved model to ' + save_checkpoint
+            print('Saved model to ' + save_checkpoint)
 
     @classmethod
     def __profile_options(cls, profile):
