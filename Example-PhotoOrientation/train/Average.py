@@ -1,3 +1,5 @@
+from functools import reduce
+
 class Average:
     def __init__(self):
         self.items = list()

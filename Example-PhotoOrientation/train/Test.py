@@ -27,8 +27,8 @@ correct_prediction = tf.equal(tf.argmax(inferred_labels, 1), tf.argmax(tf.cast(l
 accuracy_op = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 correct_images = tf.boolean_mask(image_batch, correct_prediction)
 incorrect_images = tf.boolean_mask(image_batch, tf.logical_not(correct_prediction))
-tf.image_summary('Correct Inference', correct_images, max_images = 20)
-tf.image_summary('Incorrect Inference', incorrect_images, max_images = 20)
+tf.summary.image('Correct Inference', correct_images, max_outputs = 20)
+tf.summary.image('Incorrect Inference', incorrect_images, max_outputs = 20)
 
 # Run graph
 average = Average()
@@ -40,4 +40,4 @@ TFRunner.run(
     summary = FLAGS.summary,
     summary_every = 10
 )
-print 'Model accuracy: %g' % average.calculate()
+print('Model accuracy: %g' % average.calculate())
